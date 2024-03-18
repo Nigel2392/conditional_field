@@ -85,6 +85,7 @@ class Link(blocks.StructBlock):
             # choices for a single block
             # We introduce fshow and fhide,
             # these do not automatically do the opposite for false values.
+            # You would not want to use this in this context; it is just an example.
             "gcf "
             "gcf-handler--choice "
             "gcf-action-any--fhide "
