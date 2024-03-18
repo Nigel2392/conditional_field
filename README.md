@@ -13,6 +13,7 @@ Idea based on [Wagtail UI+](https://pypi.org/project/wagtailuiplus/#description)
        ...
    ]
    ```
+   
 2. Run `python3 ./manage.py collectstatic`
 
 ## Example usage of the gcf conditional fields.
