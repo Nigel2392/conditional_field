@@ -93,19 +93,29 @@ const execRegexes = [
                     }
                 }
 
+                if (cmpValue === null) {
+                    cmpValue = "";
+                }
+
                 let valueToStringLower = value.toString().toLowerCase();
                 let cmpValueToStringLower = cmpValue.toString().toLowerCase();
+                let typLower = block.target.type.toLowerCase();
 
                 let matchVal = false;
-                if (block.target.type.toLowerCase() === "checkbox") {
-                    matchVal = cmpValueToStringLower === valueToStringLower;
-                } else if (block.target.type.toLowerCase() === "radio") {
-                    matchVal = cmpValueToStringLower === valueToStringLower;
-                } else if (block.target.type.toLowerCase() === "select") {
-                    matchVal = cmpValueToStringLower == valueToStringLower || valueToStringLower == block.target.selectedIndex;
-                } else if (block.target.type.toLowerCase() === "number") {
+                if (["checkbox", "select"].includes(typLower)) {
+                    if (cmpValue instanceof Array) {
+                        if (cmpValue === null || cmpValue === undefined) {
+                            matchVal = false;
+                        } else {
+                            matchVal = cmpValue.map(x => x.toLowerCase()).includes(valueToStringLower);
+                        }
+                    } else {
+                        matchVal = cmpValueToStringLower === valueToStringLower ||
+                                   valueToStringLower == block.target.selectedIndex;
+                    }
+                } else if (typLower === "number") {
                     matchVal = cmpValue === parseInt(value);
-                } else if (block.target.type.toLowerCase() === "range") {
+                } else if (typLower === "range") {
                     matchVal = cmpValue === parseInt(value);
                 } else {
                     matchVal = cmpValueToStringLower === valueToStringLower;
@@ -144,7 +154,7 @@ const execRegexes = [
                     }
 
                     // return if python None
-                    if (chk == "None" || chk == null || chk == 0) {
+                    if (chk == "None" || !chk) {
                         return;
                     }
 
@@ -181,6 +191,7 @@ const execRegexes = [
     },
 ]
 
+// Possibly match a bootstrap column class.
 const col_class_regex = /col-(\d+|[a-zA-Z]+)(-(\d+|[a-zA-Z]+)$)?/;
 
 // Actions to perform on the block
@@ -287,7 +298,18 @@ class RadioProxy {
     }
 
     get type() {
+        if (this.radios.length && this.radios[0].type == "checkbox") {
+            return "checkbox";
+        }
         return "select";
+    }
+
+    get values() {
+        let values = [];
+        for (let i = 0; i < this.radios.length; i++) {
+            values.push(this.radios[i].value);
+        }
+        return values;
     }
 
     get selectedIndex() {
@@ -393,6 +415,8 @@ class ConditionalBlock {
         if (this.target.length === 0) {
             throw new Error(`Conditional field ${field.id} is missing a target field with the name ${this.targetFieldName}`);
         } else if (this.target.length > 1) {
+            // Radios and checkboxes are a special case
+            // We need to proxy them to make them behave like a select element
             this.target = new RadioProxy(this.target);
         } else {
             this.target = this.target[0];
@@ -428,17 +452,12 @@ class ConditionalBlock {
 
     getValue() {
         let chk;
-        if (this.target.tagName === "SELECT") {
+        if (["select", "checkbox", "radio"].includes(this.target.tagName.toLowerCase())) {
             if (this.target.selectedOptions.length) {
-                chk = this.target.selectedOptions[0].value;
+                chk = Array.from(this.target.selectedOptions).map((x) => x.value);
             } else {
                 chk = null;
             }
-        } else if (
-            (this.target.type === "checkbox") ||
-            (this.target.type === "radio")
-        ) {
-            chk = this.target.checked;
         } else if (
             (this.target.type === "number") || 
             (this.target.type === "range")

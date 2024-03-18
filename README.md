@@ -6,6 +6,7 @@ Idea based on [Wagtail UI+](https://pypi.org/project/wagtailuiplus/#description)
 ## Installations
 
 1. Add conditional field to your `INSTALLED_APPS`
+
    ```
    INSTALLED_APPS = [
        ...
@@ -13,7 +14,6 @@ Idea based on [Wagtail UI+](https://pypi.org/project/wagtailuiplus/#description)
        ...
    ]
    ```
-   
 2. Run `python3 ./manage.py collectstatic`
 
 ## Example usage of the gcf conditional fields.
@@ -87,7 +87,7 @@ class AnimatorBlock(blocks.StructBlock):
         label=_("Animation"),
         translatable=False,
         classname=(
-            'gcf-handler '
+            'gcf '
             'gcf-handler--animation'
         ),
     )
