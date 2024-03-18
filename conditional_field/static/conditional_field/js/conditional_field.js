@@ -210,30 +210,34 @@ const globalActions = {
         let parent = conditionalBlock.block.parentElement;
         let classname = parent.className;
         let match_col = col_class_regex.exec(classname);
-        if (match_col) {
+        if (match_col && parent.children.length === 1) {
             parent.style.display = match ? "none" : "block";
         } else {
             conditionalBlock.block.style.display = match ? "none" : "block";
         }
     },
     fshow: (conditionalBlock, match=false) => {
-        let parent = conditionalBlock.block.parentElement;
-        let classname = parent.className;
-        let match_col = col_class_regex.exec(classname);
-        if (match_col) {
-            parent.style.display = "block";
-        } else {
-            conditionalBlock.block.style.display = "block";
+        if (match) {
+            let parent = conditionalBlock.block.parentElement;
+            let classname = parent.className;
+            let match_col = col_class_regex.exec(classname);
+            if (match_col && parent.children.length === 1) {
+                parent.style.display = "block";
+            } else {
+                conditionalBlock.block.style.display = "block";
+            }
         }
     },
     fhide: (conditionalBlock, match=false) => {
-        let parent = conditionalBlock.block.parentElement;
-        let classname = parent.className;
-        let match_col = col_class_regex.exec(classname);
-        if (match_col) {
-            parent.style.display = "none";
-        } else {
-            conditionalBlock.block.style.display = "none";
+        if (match) {
+            let parent = conditionalBlock.block.parentElement;
+            let classname = parent.className;
+            let match_col = col_class_regex.exec(classname);
+            if (match_col && parent.children.length === 1) {
+                parent.style.display = "none";
+            } else {
+                conditionalBlock.block.style.display = "none";
+            }
         }
     },
 };
