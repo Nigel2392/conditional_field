@@ -1,0 +1,7 @@
+include LICENSE
+include README.md
+recursive-include conditional_field/static *
+recursive-include conditional_field/templates *
+recursive-include conditional_field/locale *
+recursive-include conditional_field/migrations *
+recursive-include conditional_field/templatetags *
