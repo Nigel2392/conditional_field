@@ -23,29 +23,31 @@ from wagtail import blocks
 
 
 class Link(blocks.StructBlock):
-    text = blocks.CharBlock(
+    text = CharblockWithPlaceholder(
         required=False,
-        label=_("Link"),
-        help_text=_("The text to be displayed."),
+        label=_("Text"),
     )
+
     page = blocks.PageChooserBlock(
         required=False,
-        label=_("Link"),
+        label=_("Page"),
         classname=(
             "gcf "
             "gcf-handler--choice "
             "gcf-action--show--page "
         ),
     )
+
     document = DocumentChooserBlock(
         required=False,
         label=_("Document"),
         classname=(
             "gcf "
             "gcf-handler--choice "
-            "gcf-action--show--document "
+            "gcf-action--show--document"
         ),
     )
+
     external_link = blocks.URLBlock(
         required=False,
         label=_("External Link"),
@@ -55,22 +57,60 @@ class Link(blocks.StructBlock):
             "gcf-action--show--external_link"
         ),
     )
+
+    email = blocks.EmailBlock(
+        required=False,
+        label=_("Email"),
+        classname=(
+            "gcf "
+            "gcf-handler--choice "
+            "gcf-action--show--email"
+        ),
+    )
+
+    phone = blocks.CharBlock(
+        required=False,
+        label=_("Tel"),
+        placeholder=_("123-456-7890"),
+        validators=[
+            RegexValidator(
+                regex=r"^\+?[0-9\-\s\(\)]+$",
+                message=_("Enter a valid phone number."),
+            )
+        ],
+        min_length=7,
+        max_length=14,
+        classname=(
+            # Example of multiple allowed
+            # choices for a single block
+            # We introduce fshow and fhide,
+            # these do not automatically do the opposite for false values.
+            "gcf "
+            "gcf-handler--choice "
+            "gcf-action-any--fhide "
+            "gcf-action--fshow--email "
+            "gcf-action--fshow--phone"
+        ),
+    )
+
     choice = blocks.ChoiceBlock(
         required=True,
         choices=[
-            ("page", _("Page")),
-            ("document", _("Document")),
-            ("external_link", _("External Link")),
+             ("page", "Page")
+             ("document", "Document")
+             ("external_link", "External")
+             ("email", "Email Link")
+             ("tel", "Telephone Link")
         ],
         default="page",
         label=_("Link Type"),
         classname=(
             "gcf "
-            "gcf-handler--choice "
+            "gcf-handler--choice"
         ),
-        # Works with radios; selects and other input types.
         widget=forms.RadioSelect,
     )
+
 
 
 hide_animation_fields_classname = (

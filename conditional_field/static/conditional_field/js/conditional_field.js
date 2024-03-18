@@ -216,6 +216,26 @@ const globalActions = {
             conditionalBlock.block.style.display = match ? "none" : "block";
         }
     },
+    fshow: (conditionalBlock, match=false) => {
+        let parent = conditionalBlock.block.parentElement;
+        let classname = parent.className;
+        let match_col = col_class_regex.exec(classname);
+        if (match_col) {
+            parent.style.display = "block";
+        } else {
+            conditionalBlock.block.style.display = "block";
+        }
+    },
+    fhide: (conditionalBlock, match=false) => {
+        let parent = conditionalBlock.block.parentElement;
+        let classname = parent.className;
+        let match_col = col_class_regex.exec(classname);
+        if (match_col) {
+            parent.style.display = "none";
+        } else {
+            conditionalBlock.block.style.display = "none";
+        }
+    },
 };
 
 
