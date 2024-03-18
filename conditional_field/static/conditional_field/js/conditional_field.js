@@ -66,6 +66,16 @@ const targetActionValueRegex = /gcf-action--([a-zA-Z\-\_\d]+)--([a-zA-Z\-\_\d]+)
 const targetActionNoValueRegex = /gcf-action-empty--([a-zA-Z\-\_\d]+)/;
 const targetActionAnyValueRegex = /gcf-action-any--([a-zA-Z\-\_\d]+)/;
 
+// parent queryselector regex, example: class:goodadvice-collapsible, id:goodadvice-collapsible
+const querySelectorGeneratorFuncs = {
+    "class": (name) => `.${name}`,
+    "id": (name) => `#${name}`,
+    "data-attribute": (name) => `[data-${name}]`,
+}
+
+const parentQuerySelectorRegex = /gcf-parent--([a-zA-Z\-\_\d]+)--([a-zA-Z\-\_\d]+)/;
+
+
 const execRegexes = [
     {
         regex: targetActionValueRegex,
@@ -430,8 +440,19 @@ class ConditionalBlock {
             gcf-action--[action]--[value]: ${targetFieldName}`);
         }
 
+        let parentQuerySelector = "div.w-panel__content";
+        for (let i = 0; i < field.classList.length; i++) {
+            let match = parentQuerySelectorRegex.exec(field.classList[i]);
+            if (match && match.length > 1) {
+                let parentQuerySelectorType = match[1];
+                let parentQuerySelectorName = match[2];
+                parentQuerySelector = querySelectorGeneratorFuncs[parentQuerySelectorType](parentQuerySelectorName);
+                break;
+            }
+        }
+
         // Setup the target field
-        const panel_content = field.closest("div.w-panel__content");
+        const panel_content = field.closest(parentQuerySelector);
 
         this.target = panel_content.querySelectorAll(`div[data-contentpath="${this.targetFieldName}"] .gcf-handler--${this.targetFieldName} *:is(input, select)`);
         

@@ -23,7 +23,7 @@ from wagtail import blocks
 
 
 class Link(blocks.StructBlock):
-    text = CharblockWithPlaceholder(
+    text = CharBlockWithAttrs(
         required=False,
         label=_("Text"),
     )
