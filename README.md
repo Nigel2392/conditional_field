@@ -90,7 +90,7 @@ class Link(blocks.StructBlock):
             "gcf-handler--choice "
             "gcf-action-any--fhide "
             "gcf-action--fshow--email "
-            "gcf-action--fshow--phone"
+            "gcf-action--fshow--tel"
         ),
     )
 
