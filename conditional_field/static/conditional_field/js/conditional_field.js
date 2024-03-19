@@ -165,7 +165,7 @@ const execRegexes = [
 
                     // return if python None
                     if (chk == "None" || !chk) {
-                        return;
+                        chk = null;
                     }
 
                     if (execute) {
@@ -190,7 +190,7 @@ const execRegexes = [
     
                 let chk = block.getValue()
                 if (
-                    (!chk)
+                    (!chk || chk === "" || chk === null || chk == [])
                 ) {
                     if (execute) {
                         execute(block, !chk);
@@ -500,6 +500,10 @@ class ConditionalBlock {
         if (["select", "checkbox", "radio"].includes(this.target.tagName.toLowerCase())) {
             if (this.target.selectedOptions.length) {
                 chk = Array.from(this.target.selectedOptions).map((x) => x.value);
+                chk = chk.filter((x) => x !== "");
+                if (chk.length === 0) {
+                    chk = null;
+                }
             } else {
                 chk = null;
             }
